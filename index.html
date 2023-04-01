@@ -11,18 +11,44 @@
     <canvas id="imgCanvas" width="600" height="400" onclick="draw(event)"></canvas>
 
     <script>
+        var canvas = document.getElementById("imgCanvas");
+        var ctx = canvas.getContext("2d");
+        var isDrawing = false;
+        var spiralX, spiralY, spiralRadius, spiralAngle = 0;
+
         function draw(event){
-            var canvas = document.getElementById(imgCanvas);
-            var ctx = canvas.getContext("2d");
             var rect = canvas.getBoundingClientRect();
             var posx = event.clientX - rect.left;
             var posy = event.clientY - rect.top;
-            ctx.fillStyle = "#aaaaff";
-            ctx.beginPath();
-            ctx.arc(posx, posy, 50, 0, Math.PI * 2);
-            ctx.fill();
-            //Hi
+
+            if (isDrawing) {
+                // Draw a spiral
+                spiralRadius += 2;
+                spiralAngle += 0.1;
+                spiralX = posx + spiralRadius * Math.cos(spiralAngle);
+                spiralY = posy + spiralRadius * Math.sin(spiralAngle);
+                ctx.fillStyle = "#aaaaff";
+                ctx.beginPath();
+                ctx.arc(spiralX, spiralY, 5, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // Draw a circle
+                ctx.fillStyle = "#aaaaff";
+                ctx.beginPath();
+                ctx.arc(posx, posy, 50, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
+
+        // Toggle spiral drawing on and off with the space bar
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space") {
+                isDrawing = !isDrawing;
+                spiralRadius = 0;
+                spiralAngle = 0;
+                event.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
